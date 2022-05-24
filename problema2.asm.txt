@@ -1,0 +1,76 @@
+;Gurzu Andreea 161 problema 14
+
+
+
+extern printf
+extern scanf
+
+section .data
+x dq 1.0
+num dq 1.0
+x1 dq 1.0
+
+f_ecuatie db "1/%f=%f",10,0
+
+f_read db "%lf\n",0
+
+msg1 db "Calculam 1/x:", 9,10
+len1 equ $ - msg1
+
+msg3 db "Introduce x:", 9,10
+len3 equ $ - msg3
+
+section .bss
+section .text
+
+global main
+main:
+
+push rbp
+mov rbp, rsp
+
+mov ecx, 0
+mov edx, 0
+mov ecx, msg1
+mov edx, len1
+mov ebx, 1 
+mov eax, 4
+int 0x80
+
+mov ecx, 0
+mov edx, 0
+mov ecx, msg3
+mov edx, len3
+mov ebx, 1 
+mov eax, 4
+int 0x80
+
+
+mov rdi, f_read
+mov rax, 0 
+mov rsi, x
+call scanf
+movsd qword [x], xmm0
+
+
+;x1 e copia lui x
+movsd xmm0, [x]
+movsd qword [x1], xmm0
+
+
+; impartim 1 la x si salvam rezultatul in x
+movsd xmm0, [num]
+divsd xmm0, [x] 
+movsd [x], xmm0
+
+mov ecx, 0
+mov edx, 0
+mov rdi,f_ecuatie
+movsd xmm0, [x1]
+movsd xmm1, [x]
+mov rax, 2
+call printf
+
+mov rsp, rbp
+pop rbp 
+ret
